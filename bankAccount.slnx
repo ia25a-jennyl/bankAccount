@@ -1,1 +1,3 @@
-<Solution />
+<Solution>
+  <Project Path="src/bank/bank.csproj" />
+</Solution>
