@@ -7,13 +7,14 @@ public class BankAccount
 {
     private readonly ITransactionFee _transactionFee;
     private ILogger<BankAccount> _logger;
-    
-    public int Balance { get; private set; }
 
-    public BankAccount(ITransactionFee transactionFee, ILogger<BankAccount> logger)
-    {
+    public int Balance { get; private set; } 
+
+    public BankAccount(ITransactionFee transactionFee,ILogger<BankAccount> logger, int balance)
+    {   
         _transactionFee = transactionFee;
         _logger = logger;
+        this.Balance = balance;
     }
 
     public void Deposit(int amount)
