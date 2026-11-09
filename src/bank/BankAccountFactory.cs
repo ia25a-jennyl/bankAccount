@@ -11,7 +11,7 @@ public class BankAccountFactory
         _logger = logger;
     }
 
-    public BankAccount createBankAccount(ITransactionFee transactionFee, int balance = 0)
+    public BankAccount CreateBankAccount(ITransactionFee transactionFee, int balance = 0)
     {
         return new BankAccount(transactionFee, _logger, balance);
     }

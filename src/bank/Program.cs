@@ -32,13 +32,13 @@ public static class Program
         switch (choice)
         {
             case 1:
-                bankAccount = factory.createBankAccount(new SmallTransactionFee());
+                bankAccount = factory.CreateBankAccount(new SmallTransactionFee());
                 break;
             case 2:
-                bankAccount = factory.createBankAccount(new MediumTransactionFee());
+                bankAccount = factory.CreateBankAccount(new MediumTransactionFee());
                 break;
             case 3:
-                bankAccount = factory.createBankAccount(new LargeTransactionFee());
+                bankAccount = factory.CreateBankAccount(new LargeTransactionFee());
                 break;
             default:
                 Console.Error.WriteLine("Invalid choice");
