@@ -83,4 +83,31 @@ public sealed class Deposit_Should
 
         Assert.AreEqual(bankAccount.Balance, res);
     }
+    
+    
+    [TestMethod]
+    [DataRow(1000)]
+    [DataRow(5000)]
+    [DataRow(100)]
+    [DataRow(1)]
+    [DataRow(2000)]
+    public void Deposit_NoFee(int amount)
+    {
+        ServiceCollection services = new ServiceCollection();
+
+        services.AddLogging(loggerBuilder =>
+        {
+            loggerBuilder.ClearProviders();
+            loggerBuilder.AddConsole();
+        });
+
+        services.AddSingleton<BankAccountFactory>();
+        var serviceProvider = services.BuildServiceProvider();
+        var factory = serviceProvider.GetRequiredService<BankAccountFactory>();
+        var bankAccount = factory.CreateBankAccount(new ZeroTransacionFee());
+
+        bankAccount.Deposit(amount);
+
+        Assert.AreEqual(bankAccount.Balance, amount);
+    }
 }
