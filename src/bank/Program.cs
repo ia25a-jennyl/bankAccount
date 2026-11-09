@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace bank;
 
@@ -9,7 +10,12 @@ public static class Program
     public static void Main(string[] args)
     {
         var builder = Host.CreateApplicationBuilder(args);
-        builder.Services.AddLogging();
+        builder.Services.AddLogging(loggerBuilder =>
+            {
+                loggerBuilder.ClearProviders();
+                loggerBuilder.AddConsole();
+            }
+        );
         builder.Services.AddScoped<BankAccountFactory>();
         var host = builder.Build();
 
