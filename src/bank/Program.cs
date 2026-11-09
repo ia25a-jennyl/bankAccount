@@ -7,6 +7,17 @@ namespace bank;
 
 public static class Program
 {
+    static TransactionFeeType GetTransactionFeeType()
+    {
+        Console.WriteLine("What kind of transaction fee do you want to use?");
+        Console.WriteLine("1. Small");
+        Console.WriteLine("2. Medium");
+        Console.WriteLine("3. Large");
+        int enumType = Convert.ToInt32(Console.ReadLine());
+        if (!Enum.IsDefined(typeof(TransactionFeeType), enumType)) throw  new Exception($"Invalid value for fee type: {enumType}");
+        return (TransactionFeeType) enumType;
+    }
+
     public static void Main(string[] args)
     {
         var builder = Host.CreateApplicationBuilder(args);
@@ -16,7 +27,8 @@ public static class Program
                 loggerBuilder.AddConsole();
             }
         );
-        builder.Services.AddScoped<BankAccountFactory>();
+        builder.Services.AddScoped<BankAccount>();
+        builder.Services.AddScoped<TransactionFeeFactory>();
         var host = builder.Build();
 
         Console.WriteLine("What Transaction Fee do you want to use?");
@@ -26,25 +38,7 @@ public static class Program
 
         int choice = Convert.ToInt32(Console.ReadLine());
 
-        BankAccountFactory factory = host.Services.GetRequiredService<BankAccountFactory>();
-        BankAccount bankAccount = null;
-
-        switch (choice)
-        {
-            case 1:
-                bankAccount = factory.CreateBankAccount(new SmallTransactionFee());
-                break;
-            case 2:
-                bankAccount = factory.CreateBankAccount(new MediumTransactionFee());
-                break;
-            case 3:
-                bankAccount = factory.CreateBankAccount(new LargeTransactionFee());
-                break;
-            default:
-                Console.Error.WriteLine("Invalid choice");
-                System.Environment.Exit(1);
-                break;
-        }
+        BankAccount bankAccount = host.Services.GetRequiredService<BankAccount>();
 
         while (true)
         {
@@ -60,13 +54,17 @@ public static class Program
                 case 1:
                     Console.WriteLine("How much Money do you want to deposit?");
                     int amountDeposit = Convert.ToInt32(Console.ReadLine());
-                    bankAccount.Deposit(amountDeposit);
+                    
+                    bankAccount.Deposit(amountDeposit, GetTransactionFeeType());
+                    
                     Console.WriteLine("The new balance is: " + bankAccount.Balance);
                     break;
                 case 2:
                     Console.WriteLine("How much Money do you want to deposit?");
                     int amountWithdraw = Convert.ToInt32(Console.ReadLine());
-                    bankAccount.Withdraw(amountWithdraw);
+                    
+                    bankAccount.Withdraw(amountWithdraw, GetTransactionFeeType());
+                    
                     Console.WriteLine("The new balance is: " + bankAccount.Balance);
                     break;
                 default:

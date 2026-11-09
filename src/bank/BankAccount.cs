@@ -1,33 +1,35 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System;
+using Microsoft.Extensions.Logging;
 
 
 namespace bank;
 
 public class BankAccount
 {
-    private readonly ITransactionFee _transactionFee;
     private ILogger<BankAccount> _logger;
-
+    private ITransactionFeeFactory _transactionFeeFactory;
     public int Balance { get; private set; } 
 
-    public BankAccount(ITransactionFee transactionFee,ILogger<BankAccount> logger, int balance)
-    {   
-        _transactionFee = transactionFee;
+    public BankAccount(ILogger<BankAccount> logger, ITransactionFeeFactory transactionFeeFactory, int balance)
+    {
+        this._transactionFeeFactory = transactionFeeFactory;
         _logger = logger;
         this.Balance = balance;
     }
 
-    public void Deposit(int amount)
+    public void Deposit(int amount, Enum type)
     {
         if (amount <= 0) return;
-        int fee = _transactionFee.CalculateDepositFee(amount); 
+        
+        int fee = _transactionFeeFactory.Create(type).CalculateDepositFee(amount);
+        
         _logger.LogInformation("{deposit} got deposited", amount - fee);
         Balance += amount - fee;
     }
 
-    public void Withdraw(int amount)
+    public void Withdraw(int amount, Enum type)
     {
-        int fee = _transactionFee.CalculateWithdrawFee(amount);
+        int fee = _transactionFeeFactory.Create(type).CalculateWithdrawFee(amount);
 
         if (fee + amount > Balance)
         {
