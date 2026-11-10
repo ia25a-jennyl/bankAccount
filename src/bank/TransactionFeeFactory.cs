@@ -1,4 +1,5 @@
 ﻿using System;
+using bank._test;
 
 namespace bank;
 
@@ -15,6 +16,8 @@ public class TransactionFeeFactory : ITransactionFeeFactory
                 return new MediumTransactionFee();
             case TransactionFeeType.Large:
                 return new LargeTransactionFee();
+            case TransactionFeeType.Zero:
+                return new ZeroTransacionFee();
             default:
                 throw new ArgumentException("Invalid TransactionFeeType");
         }

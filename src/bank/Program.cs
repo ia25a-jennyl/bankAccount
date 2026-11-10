@@ -13,6 +13,7 @@ public static class Program
         Console.WriteLine("1. Small");
         Console.WriteLine("2. Medium");
         Console.WriteLine("3. Large");
+        Console.WriteLine("4. None");
         int enumType = Convert.ToInt32(Console.ReadLine());
         if (!Enum.IsDefined(typeof(TransactionFeeType), enumType)) throw  new Exception($"Invalid value for fee type: {enumType}");
         return (TransactionFeeType) enumType;
@@ -31,13 +32,6 @@ public static class Program
         builder.Services.AddScoped<TransactionFeeFactory>();
         var host = builder.Build();
 
-        Console.WriteLine("What Transaction Fee do you want to use?");
-        Console.WriteLine("1. Small");
-        Console.WriteLine("2. Medium");
-        Console.WriteLine("3. Large");
-
-        int choice = Convert.ToInt32(Console.ReadLine());
-
         BankAccount bankAccount = host.Services.GetRequiredService<BankAccount>();
 
         while (true)
@@ -47,7 +41,7 @@ public static class Program
             Console.WriteLine("2. Withdraw Money");
             Console.WriteLine("3. Exit");
 
-            choice = Convert.ToInt32(Console.ReadLine());
+            int choice = Convert.ToInt32(Console.ReadLine());
 
             switch (choice)
             {
@@ -60,7 +54,7 @@ public static class Program
                     Console.WriteLine("The new balance is: " + bankAccount.Balance);
                     break;
                 case 2:
-                    Console.WriteLine("How much Money do you want to deposit?");
+                    Console.WriteLine("How much Money do you want to withdraw?");
                     int amountWithdraw = Convert.ToInt32(Console.ReadLine());
                     
                     bankAccount.Withdraw(amountWithdraw, GetTransactionFeeType());

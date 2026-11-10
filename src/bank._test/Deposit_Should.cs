@@ -24,7 +24,7 @@ public sealed class DepositShould
         });
         
         
-        services.AddSingleton<ITransactionFeeFactory, TestTransactionFeeFactory>();
+        services.AddSingleton<TransactionFeeFactory>();
         services.AddSingleton<BankAccount>();
         var serviceProvider = services.BuildServiceProvider();
         var bankAccount = serviceProvider.GetRequiredService<BankAccount>();
@@ -50,7 +50,7 @@ public sealed class DepositShould
             loggerBuilder.AddConsole();
         });
 
-        services.AddSingleton<ITransactionFeeFactory, TestTransactionFeeFactory>();
+        services.AddSingleton<TransactionFeeFactory>();
         services.AddSingleton<BankAccount>();
         var serviceProvider = services.BuildServiceProvider();
         var bankAccount = serviceProvider.GetRequiredService<BankAccount>();
@@ -75,7 +75,7 @@ public sealed class DepositShould
             loggerBuilder.AddConsole();
         });
 
-        services.AddSingleton<ITransactionFeeFactory, TestTransactionFeeFactory>();
+        services.AddSingleton<TransactionFeeFactory>();
         services.AddSingleton<BankAccount>();
         var serviceProvider = services.BuildServiceProvider();
         var bankAccount = serviceProvider.GetRequiredService<BankAccount>();
@@ -104,12 +104,12 @@ public sealed class DepositShould
             loggerBuilder.AddConsole();
         });
 
-        services.AddSingleton<ITransactionFeeFactory, TestTransactionFeeFactory>();
+        services.AddSingleton<TransactionFeeFactory>();
         services.AddSingleton<BankAccount>();
         var serviceProvider = services.BuildServiceProvider();
         var bankAccount = serviceProvider.GetRequiredService<BankAccount>();
 
-        bankAccount.Deposit(amount, TestTransactionFeeType.Zero);
+        bankAccount.Deposit(amount, TransactionFeeType.Zero);
 
         Assert.AreEqual(bankAccount.Balance, amount);
     }

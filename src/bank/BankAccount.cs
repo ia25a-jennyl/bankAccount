@@ -7,17 +7,17 @@ namespace bank;
 public class BankAccount
 {
     private ILogger<BankAccount> _logger;
-    private ITransactionFeeFactory _transactionFeeFactory;
+    private TransactionFeeFactory _transactionFeeFactory;
     public int Balance { get; private set; } 
 
-    public BankAccount(ILogger<BankAccount> logger, ITransactionFeeFactory transactionFeeFactory, int balance)
+    public BankAccount(ILogger<BankAccount> logger, TransactionFeeFactory transactionFeeFactory)
     {
         this._transactionFeeFactory = transactionFeeFactory;
         _logger = logger;
-        this.Balance = balance;
+        this.Balance = 0;
     }
 
-    public void Deposit(int amount, Enum type)
+    public void Deposit(int amount, TransactionFeeType type)
     {
         if (amount <= 0) return;
         
@@ -27,7 +27,7 @@ public class BankAccount
         Balance += amount - fee;
     }
 
-    public void Withdraw(int amount, Enum type)
+    public void Withdraw(int amount, TransactionFeeType type)
     {
         int fee = _transactionFeeFactory.Create(type).CalculateWithdrawFee(amount);
 
