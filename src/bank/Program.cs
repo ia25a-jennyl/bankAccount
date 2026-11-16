@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -21,7 +22,7 @@ public static class Program
 
     public static void Main(string[] args)
     {
-        var builder = Host.CreateApplicationBuilder(args);
+        var builder = Host.CreateApplicationBuilder();
         builder.Services.AddLogging(loggerBuilder =>
             {
                 loggerBuilder.ClearProviders();
@@ -30,9 +31,21 @@ public static class Program
         );
         builder.Services.AddScoped<BankAccount>();
         builder.Services.AddScoped<TransactionFeeFactory>();
+        builder.Services.AddSingleton<PersistentStorageBankAccount>();
         var host = builder.Build();
 
-        BankAccount bankAccount = host.Services.GetRequiredService<BankAccount>();
+        BankAccount bankAccount;
+
+        if (args.Length == 1)
+        {   
+            PersistentStorageBankAccount persistentStorageBankAccount = host.Services.GetRequiredService<PersistentStorageBankAccount>();
+            BankAccountDto bankAccountDto = persistentStorageBankAccount.LoadFromJson(File.ReadAllText(args[0]));
+            bankAccount = ActivatorUtilities.CreateInstance<BankAccount>(host.Services, bankAccountDto);
+        }
+        else
+        {
+            bankAccount = host.Services.GetRequiredService<BankAccount>();
+        }
 
         while (true)
         {
@@ -40,6 +53,7 @@ public static class Program
             Console.WriteLine("1. Deposit Money");
             Console.WriteLine("2. Withdraw Money");
             Console.WriteLine("3. Exit");
+            Console.WriteLine("4. Exit and Save to Json");
 
             int choice = Convert.ToInt32(Console.ReadLine());
 
@@ -61,6 +75,13 @@ public static class Program
                     
                     Console.WriteLine("The new balance is: " + bankAccount.Balance);
                     break;
+                case 4:
+                    PersistentStorageBankAccount persistentStorageBankAccount = host.Services.GetRequiredService<PersistentStorageBankAccount>();
+                    Console.WriteLine("How should the file be named?");
+                    string fileName = Console.ReadLine();
+                    persistentStorageBankAccount.SaveToJson(bankAccount, fileName);
+                    Console.WriteLine("Bye Bye!");
+                    return;
                 default:
                     Console.WriteLine("Bye Bye!");
                     return;
