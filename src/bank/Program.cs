@@ -16,8 +16,9 @@ public static class Program
         Console.WriteLine("3. Large");
         Console.WriteLine("4. None");
         int enumType = Convert.ToInt32(Console.ReadLine());
-        if (!Enum.IsDefined(typeof(TransactionFeeType), enumType)) throw  new Exception($"Invalid value for fee type: {enumType}");
-        return (TransactionFeeType) enumType;
+        if (!Enum.IsDefined(typeof(TransactionFeeType), enumType))
+            throw new Exception($"Invalid value for fee type: {enumType}");
+        return (TransactionFeeType)enumType;
     }
 
     public static void Main(string[] args)
@@ -37,8 +38,9 @@ public static class Program
         BankAccount bankAccount;
 
         if (args.Length == 1)
-        {   
-            PersistentStorageBankAccount persistentStorageBankAccount = host.Services.GetRequiredService<PersistentStorageBankAccount>();
+        {
+            PersistentStorageBankAccount persistentStorageBankAccount =
+                host.Services.GetRequiredService<PersistentStorageBankAccount>();
             BankAccountDto bankAccountDto = persistentStorageBankAccount.LoadFromJson(File.ReadAllText(args[0]));
             bankAccount = ActivatorUtilities.CreateInstance<BankAccount>(host.Services, bankAccountDto);
         }
@@ -54,6 +56,8 @@ public static class Program
             Console.WriteLine("2. Withdraw Money");
             Console.WriteLine("3. Exit");
             Console.WriteLine("4. Exit and Save to Json");
+            Console.WriteLine("5. Show Transaction History");
+
 
             int choice = Convert.ToInt32(Console.ReadLine());
 
@@ -62,26 +66,34 @@ public static class Program
                 case 1:
                     Console.WriteLine("How much Money do you want to deposit?");
                     int amountDeposit = Convert.ToInt32(Console.ReadLine());
-                    
+
                     bankAccount.Deposit(amountDeposit, GetTransactionFeeType());
-                    
+
                     Console.WriteLine("The new balance is: " + bankAccount.Balance);
                     break;
                 case 2:
                     Console.WriteLine("How much Money do you want to withdraw?");
                     int amountWithdraw = Convert.ToInt32(Console.ReadLine());
-                    
+
                     bankAccount.Withdraw(amountWithdraw, GetTransactionFeeType());
-                    
+
                     Console.WriteLine("The new balance is: " + bankAccount.Balance);
                     break;
                 case 4:
-                    PersistentStorageBankAccount persistentStorageBankAccount = host.Services.GetRequiredService<PersistentStorageBankAccount>();
+                    PersistentStorageBankAccount persistentStorageBankAccount =
+                        host.Services.GetRequiredService<PersistentStorageBankAccount>();
                     Console.WriteLine("How should the file be named?");
                     string fileName = Console.ReadLine();
                     persistentStorageBankAccount.SaveToJson(bankAccount, fileName);
                     Console.WriteLine("Bye Bye!");
                     return;
+
+                case 5:
+                    for (int i = 0; i < bankAccount.Transactions.Count; i++)
+                    {
+                        Console.WriteLine($"{i + 1}. {bankAccount.Transactions[i]}");
+                    }
+                    break;
                 default:
                     Console.WriteLine("Bye Bye!");
                     return;
