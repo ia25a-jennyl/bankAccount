@@ -3,6 +3,6 @@
         <LangVersion>latest</LangVersion>
         <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
         <Nullable>enable</Nullable>
-        <OutDir>.\build\</OutDir>
+        <BaseOutputPath>.\build\</BaseOutputPath>
     </PropertyGroup>
 </Project>
