@@ -4,13 +4,13 @@ using Microsoft.Extensions.Logging;
 namespace bank._test;
 
 [TestClass]
-public sealed class History_Should
+public sealed class HistoryShould
 {
     [TestMethod]
     [DataRow(new int[]{100, 100, 100, 100, 100})]
     [DataRow(new int[]{100, 100, 100, 200, 100})]
     [DataRow(new int[]{})]
-    public void TransactionHistoryDeposit(int[] Deposits)
+    public void TransactionHistoryDeposit(int[] deposits)
     {
         ServiceCollection services = new ServiceCollection();
 
@@ -29,7 +29,7 @@ public sealed class History_Should
         List<Transaction> shouldTransactions = [];
 
 
-        foreach (var amount in Deposits)
+        foreach (var amount in deposits)
         {
             bankAccount.Deposit(amount, TransactionFeeType.Zero);
             shouldTransactions.Add(new Transaction(amount, TransactionDirection.Deposit, TransactionFeeType.Zero));

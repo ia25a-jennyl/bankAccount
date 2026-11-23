@@ -1,4 +1,4 @@
-﻿namespace bank._test;
+﻿namespace bank;
 
 public class ZeroTransacionFee : ITransactionFee
 {

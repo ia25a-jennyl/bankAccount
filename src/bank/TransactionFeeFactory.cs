@@ -1,5 +1,4 @@
 ﻿using System;
-using bank._test;
 
 namespace bank;
 

@@ -6,7 +6,6 @@ namespace bank._test;
 [TestClass]
 public sealed class DepositShould
 {
-    
     [TestMethod]
     [DataRow(1000, 990)]
     [DataRow(5000, 4950)]
@@ -22,8 +21,8 @@ public sealed class DepositShould
             loggerBuilder.ClearProviders();
             loggerBuilder.AddConsole();
         });
-        
-        
+
+
         services.AddSingleton<TransactionFeeFactory>();
         services.AddSingleton<BankAccount>();
         var serviceProvider = services.BuildServiceProvider();
@@ -33,7 +32,7 @@ public sealed class DepositShould
 
         Assert.AreEqual(bankAccount.Balance, res);
     }
-    
+
     [TestMethod]
     [DataRow(1000, 950)]
     [DataRow(5000, 4750)]
@@ -59,6 +58,7 @@ public sealed class DepositShould
 
         Assert.AreEqual(bankAccount.Balance, res);
     }
+
     [TestMethod]
     [DataRow(1000, 900)]
     [DataRow(5000, 4500)]
@@ -84,10 +84,8 @@ public sealed class DepositShould
 
         Assert.AreEqual(bankAccount.Balance, res);
     }
-    
-    
-    
-    
+
+
     [TestMethod]
     [DataRow(1000)]
     [DataRow(5000)]

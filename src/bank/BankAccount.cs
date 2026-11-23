@@ -1,19 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Text.Json.Serialization;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-
 
 namespace bank;
 
 public class BankAccount
 {
-    [JsonIgnore]
-    private ILogger<BankAccount> _logger;
-    [JsonIgnore]
-    private TransactionFeeFactory _transactionFeeFactory;
+    [JsonIgnore] private ILogger<BankAccount> _logger;
+    [JsonIgnore] private TransactionFeeFactory _transactionFeeFactory;
     public int Balance { get; private set; }
 
     public List<Transaction> Transactions;
@@ -38,13 +32,13 @@ public class BankAccount
     public void Deposit(int amount, TransactionFeeType type)
     {
         if (amount <= 0) return;
-        
+
         int fee = _transactionFeeFactory.Create(type).CalculateDepositFee(amount);
-        
+
         _logger.LogInformation("{deposit} got deposited", amount - fee);
         _logger.LogInformation("{balance} it the new balance", Balance);
         Balance += amount - fee;
-        
+
         Transactions.Add(new Transaction(amount - fee, TransactionDirection.Deposit, type));
     }
 
@@ -57,15 +51,12 @@ public class BankAccount
             _logger.LogError("Not enough balance to withdraw that amount");
             return;
         }
-        
+
         Balance -= amount + fee;
-        
+
         _logger.LogInformation("{withdraw} got withdrawn", amount);
         _logger.LogInformation("{balance} it the new balance", Balance);
-        
+
         Transactions.Add(new Transaction(-(amount + fee), TransactionDirection.Withdraw, type));
     }
-
-
-
 }
